@@ -10,6 +10,10 @@ photos_json = os.path.join(dirname, 'photos.json')
 def get_next_image():
     with open(photos_json, 'r') as f:
         status = json.load(f)
+
+    if len(status) <= 1:
+        return None
+    
     for image in status:
         if not image['shown']:
             image['shown'] = True
@@ -27,6 +31,8 @@ def get_next_image():
     return get_next_image()
 
 # show image on display
-img = Image.open(os.path.join(dirname, f'photos/{get_next_image()}'))
-display.set_image(img)
-display.show()
+f = get_next_image()
+if f != None:
+    img = Image.open(os.path.join(dirname, f'photos/{f}'))
+    display.set_image(img)
+    display.show()
