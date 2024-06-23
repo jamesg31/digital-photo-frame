@@ -1,0 +1,3 @@
+python-dotenv
+beautifulsoup4
+inky[rpi,example-depends]
