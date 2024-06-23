@@ -12,6 +12,12 @@ def get_next_image():
         status = json.load(f)
 
     if len(status) <= 1:
+        if len(status) == 1:
+            if not status[0]['shown']:
+                status[0]['shown'] = True
+                with open(photos_json, 'w') as f:
+                    json.dump(status, f)
+                return status[0]['image']
         return None
     
     for image in status:
