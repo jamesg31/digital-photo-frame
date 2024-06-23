@@ -16,6 +16,7 @@ remote = [node.get('href') for node in soup.find_all('a') if node.get('href').en
 
 dirname = os.path.dirname(__file__)
 photos_dir = os.path.join(dirname, 'photos')
+photos_json = os.path.join(dirname, 'photos.json')
 
 local = os.listdir(photos_dir)
 
@@ -23,10 +24,10 @@ for file in local:
     if file not in remote:
         os.remove(os.path.join(photos_dir, file))
         # remove from status.json
-        with open('photos.json', 'r') as f:
+        with open(photos_json, 'r') as f:
             status = json.load(f)
         status = [image for image in status if image['image'] != file]
-        with open('photos.json', 'w') as f:
+        with open(photos_json, 'w') as f:
             json.dump(status, f)
         print(f'{file} removed')
 
@@ -36,9 +37,9 @@ for file in remote:
         with open(os.path.join(photos_dir, file), 'wb') as f:
             f.write(response.content)
         # add to status.json
-        with open('photos.json', 'r') as f:
+        with open(photos_json, 'r') as f:
             status = json.load(f)
         status.append({'image': file, 'shown': False})
-        with open('photos.json', 'w') as f:
+        with open(photos_json, 'w') as f:
             json.dump(status, f)
         print(f'{file} added')

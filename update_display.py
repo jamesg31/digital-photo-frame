@@ -1,17 +1,19 @@
 from inky.auto import auto
 from PIL import Image
 import json
+import os
 display = auto()
-
+dirname = os.path.dirname(__file__)
+photos_json = os.path.join(dirname, 'photos.json')
 
 # get first not shown image from status.json
 def get_next_image():
-    with open('photos.json', 'r') as f:
+    with open(photos_json, 'r') as f:
         status = json.load(f)
     for image in status:
         if not image['shown']:
             image['shown'] = True
-            with open('photos.json', 'w') as f:
+            with open(photos_json, 'w') as f:
                 json.dump(status, f)
             return image['image']
         
@@ -19,12 +21,12 @@ def get_next_image():
     for image in status:
         image['shown'] = False
 
-    with open('photos.json', 'w') as f:
+    with open(photos_json, 'w') as f:
         json.dump(status, f)
 
     return get_next_image()
 
 # show image on display
-img = Image.open(f'photos/{get_next_image()}')
+img = Image.open(os.path.join(dirname, f'photos/{get_next_image()}'))
 display.set_image(img)
 display.show()
